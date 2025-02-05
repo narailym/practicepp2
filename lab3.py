@@ -26,6 +26,25 @@ print(solve(numheads, numlegs))
 
 #4
 
+def prim(n):
+    if n < 2:
+        return False
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    return True
+
+def prim2(nums):
+    prims = [] 
+    for num in nums:
+        if prim(num):
+            prims.append(num) 
+    return prims
+nums1 = input()
+numbs = list(map(int, nums1.split()))
+
+prim3 =prim2(numbs)
+print("Primenums:", prim3)
 
 #5
 
