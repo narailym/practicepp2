@@ -1,5 +1,5 @@
 #1
-'''
+
 def nums(n):
     for i in range(1, n+1):
         yield i**2
@@ -43,9 +43,9 @@ def imple(n):
 n = int(input())
 for i in imple(n):
     print(i)
-'''
+
 #math
-'''
+
 import math
 def rad(n):
     torad = (n * math.pi)/180
@@ -53,10 +53,10 @@ def rad(n):
 
 
 n = float(input("Input degree: ")) 
-print(f"Output radian: {rad(n)}")'''
+print(f"Output radian: {rad(n)}")
 
 #2
-'''
+
 import math
 def uni(h, firstval, secval):
     area = (h* (firstval+secval))/2
@@ -64,10 +64,10 @@ def uni(h, firstval, secval):
 h = int(input("Height: "))
 firstval = int(input("Base, first value: "))
 secval = int(input("Base, second value: "))
-print(f"Expected Output: {uni(h, firstval, secval)}")'''
+print(f"Expected Output: {uni(h, firstval, secval)}")
 
 #3
-'''
+
 import math
 def polygon(n,s):
     areap = ((n*s**2)*math.tan(math.pi/n))/4
@@ -81,11 +81,11 @@ print(f"The area of the polygon is: {polygon(n,s)}")
 n = int(input("Length of base: "))
 h = int(input("Height of parallelogram: "))
 areapara = n*h
-print(f"Expected Output: {areapara}")'''
+print(f"Expected Output: {areapara}")
 
-'''date = datetime.datetime.today()-datetime.timedelta(days=5)
+date = datetime.datetime.today()-datetime.timedelta(days=5)
 print(date)
-'''
+
 from datetime import datetime, timedelta
 nowday = datetime.today()
 yestr = nowday - timedelta(1)
