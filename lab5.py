@@ -62,5 +62,5 @@ print(final)
 #10
 import re
 text = input()
-res = re.sub(r'([A-Z]){1}', lambda match: "_" + match.group(1).lower(), text).lstrip('_')
+res = re.sub(r'([A-Z]){1}', lambda match: "_" + match.group(1).lower(), text)
 print(res)
