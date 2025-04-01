@@ -1,0 +1,129 @@
+import pygame
+import random
+import time
+
+pygame.init()
+
+screen = pygame.display.set_mode((730, 600))
+pygame.display.set_caption("Racer game")
+
+road = pygame.image.load("images/Street.png")
+road = pygame.transform.scale(road, (730, 600))
+
+car = pygame.image.load("images/Player.png")
+car = pygame.transform.scale(car, (90, 90))
+
+coin = pygame.image.load("images/coin.png")
+coin = pygame.transform.scale(coin, (60, 60))
+
+enemy = pygame.image.load("images/Enemy.png")
+enemy = pygame.transform.scale(enemy, (90, 90))
+
+coinsimages = {
+    "small" : pygame.transform.scale(pygame.image.load("images/coin.png"), (20, 20)),
+    "med" : pygame.transform.scale(pygame.image.load("images/coin.png"), (30, 30)),
+    "big" : pygame.transform.scale(pygame.image.load("images/coin.png"), (40, 40))
+}
+
+clock = pygame.time.Clock()
+road_y = 0
+speed = 5
+
+left_limit = 100
+right_limit = 500
+
+x = 260
+y = 200
+
+car_size = 100
+
+last_coin_time = time.time()
+coin_delay = 2
+
+last_enemy_time1 = time.time()
+enemy_delay = 3
+
+money_speed = 5
+car_speed = 5
+score = 0
+incspeed = 5
+
+MoneyList = []
+CarList = []
+
+font = pygame.font.Font(None, 36)
+running = True
+while running:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT and x >= left_limit:
+                x -= 50
+                x = max(x, left_limit)
+            elif event.key == pygame.K_RIGHT and x <= right_limit:
+                x += 50
+                x = min(x, right_limit)
+
+    if time.time() - last_coin_time > coin_delay:
+        money_x = random.choice([100, 250, 400])
+        weight = random.choice(["small","med", "big"])
+        coin_size = {"small": 20, "med": 30,"big":40}[weight]
+        coin_value = {"small": 1, "med": 3,"big":5}[weight]
+        MoneyList.append([money_x, -coin_size, coin_size, weight, coin_value])
+        last_coin_time = time.time()
+
+    for money in MoneyList:
+        money[1] += money_speed
+
+    car_rect = pygame.Rect(x, y, 100, 100)
+    for money in MoneyList[:]:
+        money_rect = pygame.Rect(money[0], money[1], money[2], money[2])
+        if car_rect.colliderect(money_rect):
+            score += money[4]
+            MoneyList.remove(money)
+
+    MoneyList = [money for money in MoneyList if money[1] < 460]
+    speedcar = 3 + (score // incspeed)
+
+    if time.time() - last_enemy_time1 > enemy_delay:
+        car_x = random.choice([100, 250, 400])
+        CarList.append([car_x, -car_size])
+        last_enemy_time1 = time.time()
+    for enemycar in CarList:
+        enemycar[1] += speedcar
+
+    for enemy_car in CarList:
+        enemy_car[1] += car_speed
+
+    car_rect = pygame.Rect(x, y, 100, 100)
+    for enemy_car in CarList[:]:
+        enemy_rect = pygame.Rect(enemy_car[0], enemy_car[1], car_size, car_size)
+        if car_rect.colliderect(enemy_rect):
+            running = False
+
+    CarList = [car for car in CarList if car[1] < 460]
+
+    road_y += speed
+    if road_y >= 400:
+        road_y = 0
+
+
+
+    screen.blit(road, (0, road_y - 400))
+    screen.blit(road, (0, road_y))
+    screen.blit(car, (x, y))
+
+    textscore = font.render(f"Score:{score} ", True, (0, 255, 255))
+    screen.blit(textscore, (10, 10))
+
+    for money in MoneyList:
+        screen.blit(coinsimages[money[3]], (money[0], money[1]))
+
+    for enemy_car in CarList:
+        screen.blit(enemy, (enemy_car[0], enemy_car[1]))
+
+    pygame.display.flip()
+    clock.tick(30)
+pygame.quit()
