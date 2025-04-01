@@ -1,0 +1,118 @@
+import sys
+import pygame
+pygame.init()
+yell = (241, 251, 157)
+black = (0, 0, 0)
+vio = (181, 27, 224)
+greenish = (136, 174, 113)
+bluish = (116, 196, 219)
+
+
+
+screen = pygame.display.set_mode((800,600))
+pygame.display.set_caption("Draw")
+
+
+zat = "line"
+colorforthem = black
+draw = False
+shapes = []
+startpos = None
+
+
+def drawshape(surface, shape):
+    zat, colorforthem, start, end = shape
+    if zat == "line":
+        pygame.draw.line(surface, colorforthem, start, end, 3)
+    elif zat == "square":
+        size = min(abs(end[0] - start[0]), abs(end[1] - start[1]))
+        rect = pygame.Rect(start, (size, size))
+        pygame.draw.rect(surface, colorforthem, rect, 3)
+    elif zat == "circle":
+        radius = max(abs(end[0] - start[0]), abs(end[1] - start[1]))
+        pygame.draw.circle(surface, colorforthem, start, radius, 3)
+    elif zat == "righttri":
+        points = [start, (start[0], end[1]), end]
+        pygame.draw.polygon(surface, colorforthem, points, 3)
+    elif zat == "equiltriangle":
+        side_length = abs(end[0] - start[0])
+        height = (3 ** 0.5 / 2) * side_length
+        points = [
+            (start[0], start[1] - height / 2),
+            (start[0] - side_length / 2, start[1] + height / 2),
+            (start[0] + side_length / 2, start[1] + height / 2),
+        ]
+        pygame.draw.polygon(surface, colorforthem, points, 3)
+    elif zat == "rhom_bus":
+        width = abs(end[0] - start[0])
+        height = abs(end[1] - start[1])
+        points = [
+            (start[0], start[1] - height // 2),
+            (start[0] - width // 2, start[1]),
+            (start[0], start[1] + height // 2),
+            (start[0] + width // 2, start[1]),
+        ]
+        pygame.draw.polygon(surface, colorforthem, points, 3)
+
+def main():
+    global zat, colorforthem, draw, startpos
+
+    clock = pygame.time.Clock()
+    running = True
+
+    while running:
+        screen.fill(yell)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_l:
+                    zat = "line"
+                elif event.key == pygame.K_s:
+                    zat = "square"
+                elif event.key == pygame.K_c:
+                    zat = "circle"
+                elif event.key == pygame.K_t:
+                    zat = "righttri"
+                elif event.key == pygame.K_e:
+                    zat = "equiltri"
+                elif event.key == pygame.K_r:
+                    zat = "rhom_bus"
+                elif event.key == pygame.K_1:
+                    colorforthem = vio
+                elif event.key == pygame.K_2:
+                    colorforthem = greenish
+                elif event.key == pygame.K_3:
+                    colorforthem = bluish
+                elif event.key == pygame.K_d:
+                    shapes.clear()
+
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    draw = True
+                    startpos = event.pos
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    draw = False
+                    endpos = event.pos
+                    shapes.append((zat, colorforthem, startpos, endpos))
+
+        for shape in shapes:
+            drawshape(screen, shape)
+
+        if draw:
+            endpos = pygame.mouse.get_pos()
+            drawshape(screen, (zat, colorforthem, startpos, endpos))
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
