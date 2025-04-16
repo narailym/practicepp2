@@ -23,10 +23,9 @@ def create_table():
 
 
 def insert_values(name, category, number):
-    # Проверка на существование данных в таблице
     with conn.cursor() as cur:
         cur.execute("SELECT * FROM phonebook WHERE name = %s AND number = %s", (name, number))
-        if not cur.fetchone():  # Если данных нет
+        if not cur.fetchone(): 
             command = "INSERT INTO phonebook(name, category, number) VALUES (%s, %s, %s)"
             cur.execute(command, (name, category, number))
             conn.commit()
